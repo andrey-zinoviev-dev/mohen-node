@@ -2,6 +2,8 @@ const express = require("express");
 
 const app = express();
 
+const cors = require("cors");
+
 const { router } = require("./routers/router");
 
 //mongoose
@@ -17,6 +19,10 @@ mongoose.connect("mongodb://127.0.0.1:27017/mohen")
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
+
+app.use(cors({
+  origin: ["http://localhost:5173"]
+}))
 
 app.use("/applications", router);
 
