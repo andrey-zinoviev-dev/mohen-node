@@ -2,9 +2,7 @@ const Applications = require("../models/applications");
 
 const getApplication = (req, res) => {
   const { id } = req.params;
-
-  console.log(id);
-
+  
   Applications.findById(id)
   .then((doc) => {
     if(!doc) {
