@@ -13,7 +13,14 @@ const getApplication = (req, res) => {
 };
 
 const sendApplication = (req, res) => {
-  Applications.findOne({phone: req.body.phone})
+  const bodyEntries = Object.entries(req.body);
+  // console.log(bodyEntries);
+  // const newObj = {};
+  // bodyEntries.forEach(([key, value]) => {
+  //   newObj[key] = value.value;
+  // });
+  // console.log(newObj);
+  Applications.findOne({phone: req.body.phone.value})
   .then((doc) => {
     // console.log(doc);
     if(doc) {
