@@ -63,9 +63,25 @@ const sendApplication = (req, res) => {
   })
   // console.log(req.body);
   // res.status(201).send({message: "no"});
-}
+};
+
+const decideApplication = (req, res) => {
+  const { id } = req.params;
+  const { decision } = req.body;
+
+  Applications.findById(id)
+  .then((doc) => {
+    if(!doc) {
+      throw new Error("Анкета не найдена");
+    }
+    doc.approved = decision;
+    doc.save();
+    return res.status(201).send(doc);
+  })
+};
 
 module.exports = {
   getApplication,
   sendApplication,
+  decideApplication,
 }

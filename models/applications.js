@@ -4,7 +4,9 @@ const photoSchema = new mongoose.Schema({
   name: String,
   type: String,
   path: String,
-})
+});
+
+// const 
 
 const applicationSchema = new mongoose.Schema({
   name: {value: String, textarea: Boolean, label: String},
@@ -21,8 +23,8 @@ const applicationSchema = new mongoose.Schema({
   photos: {
     value: [photoSchema],
     photo: Boolean,
-  }
-
+  },
+  approved: {value: Boolean, approved: Boolean},
 });
 
 module.exports = mongoose.model("Applications", applicationSchema);
