@@ -23,6 +23,7 @@ const getApplication = (req, res) => {
     if(!doc) {
       throw new Error("Анкета не найдена");
     }
+    console.log(doc);
     Promise.all(doc.photos.value.map((photo) => {
       const readCommand = new GetObjectCommand({
         Bucket: process.env.AWS_NAME,
@@ -74,7 +75,9 @@ const decideApplication = (req, res) => {
     if(!doc) {
       throw new Error("Анкета не найдена");
     }
-    doc.approved = decision;
+    // console.log(decision);
+    doc.approved = {value: decision, approved: true};
+    // // doc.approved = decision;
     doc.save();
     return res.status(201).send(doc);
   })

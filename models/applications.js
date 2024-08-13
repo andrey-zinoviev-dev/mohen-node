@@ -24,7 +24,24 @@ const applicationSchema = new mongoose.Schema({
     value: [photoSchema],
     photo: Boolean,
   },
-  approved: {value: Boolean, approved: Boolean},
+  approved: {
+    value: {
+      approved: Boolean,
+      declined: Boolean,
+      // default: {
+      //   approved: false,
+      //   declined: false,
+      // }
+    }, 
+    approved: Boolean,
+    // default: {
+    //   value: {
+    //     approved: false,
+    //     declined: false,
+    //   },
+    //   approved: false,
+    // },
+  },
 });
 
 module.exports = mongoose.model("Applications", applicationSchema);
