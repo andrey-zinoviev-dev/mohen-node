@@ -5,6 +5,7 @@ const app = express();
 const cors = require("cors");
 
 const { router } = require("./routers/router");
+const { userRouter } = require("./routers/userRouter");
 
 //mongoose
 const mongoose = require("mongoose");
@@ -25,6 +26,7 @@ app.use(cors({
 }))
 
 app.use("/applications", router);
+app.use("/users", userRouter);
 
 app.listen(3001, () => {
   console.log("yes");
