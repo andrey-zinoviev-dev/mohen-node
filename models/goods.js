@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const goodSchema = mongoose.Schema({
+const goodSchema = new mongoose.Schema({
   title: String,
   cover: String,
   price: Number,
@@ -14,3 +14,4 @@ const goodSchema = mongoose.Schema({
   // dimensions: {}
 });
 
+module.exports = mongoose.model("Goods", goodSchema);
