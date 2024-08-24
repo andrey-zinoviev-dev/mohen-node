@@ -1,4 +1,6 @@
 const Applications = require("../models/applications");
+const Brands = require("../models/brands");
+
 //dotenv
 const dotenv = require("dotenv");
 dotenv.config();
@@ -77,8 +79,18 @@ const decideApplication = (req, res) => {
     }
     // console.log(decision);
     doc.approved = {value: decision, approved: true};
+
     // // doc.approved = decision;
     doc.save();
+
+    if(decision) {
+      return Brands.create({name: doc.name.value, description: doc.description.value, cover: "", goodsCollection: []})
+      .then((createdBrand) => {
+        return res.status(201).send(doc);
+      })
+
+    }
+    
     return res.status(201).send(doc);
   })
 };
