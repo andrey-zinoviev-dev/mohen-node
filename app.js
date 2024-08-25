@@ -8,6 +8,7 @@ const { router } = require("./routers/router");
 const { userRouter } = require("./routers/userRouter");
 const { brandRouter } = require("./routers/brandRouter");
 const { goodsRouter } = require("./routers/goodsRouter");
+const { transactionsRouter } = require("./routers/transactionsRouter");
 
 //mongoose
 const mongoose = require("mongoose");
@@ -31,6 +32,7 @@ app.use("/applications", router);
 app.use("/users", userRouter);
 app.use("/brands", brandRouter);
 app.use("/goods", goodsRouter);
+app.use("/transactions", transactionsRouter);
 
 app.listen(3001, () => {
   console.log("yes");

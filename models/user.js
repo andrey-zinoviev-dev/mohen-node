@@ -10,11 +10,12 @@ const userSchema = new mongoose.Schema({
   email: String,
   phone: String,
   seller: Boolean,
+  description: String,
   favourites: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Goods",
-    }
+    },
   ],
   basket: [
     {
@@ -22,8 +23,41 @@ const userSchema = new mongoose.Schema({
       ref: "Goods",
     }
   ],
-  ordersHistory: Array,
-  goods: Array,
+  ordersHistory: [
+    {
+      brand: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+      },
+      goods: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Goods",
+        }
+      ],
+      price: Number,
+    }
+  ],
+  sellsHistory: [
+    {
+      customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      goods: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Goods",
+        }
+      ],
+    }
+  ],
+  goods: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Goods",
+    }
+  ],
 });
 
 module.exports = mongoose.model("Users", userSchema);

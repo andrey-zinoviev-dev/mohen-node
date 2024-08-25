@@ -39,7 +39,7 @@ const getSellers = (req, res) => {
 const getSeller = (req, res) => {
   const { id } = req.params;
 
-  Users.findById(id).then((doc) => {
+  Users.findById(id).populate("goods").then((doc) => {
     if(!doc) {
       throw new Error("Дизайнер не найден");
     }
