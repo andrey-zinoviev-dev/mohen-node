@@ -1,9 +1,9 @@
 const Transactions = require("../models/transactions");
 
 const showTransactions = (req, res) => {
-    const { id } = req.params;
+    const { _id } = req.user.payload;
     // console.log(id);
-    Transactions.find({parties: {$in: [id]}})
+    Transactions.find({parties: {$in: [_id]}})
     .then((docs) => {
         if(!docs) {
             throw new Error("История пуста");
@@ -13,11 +13,7 @@ const showTransactions = (req, res) => {
     .catch((err) => {
         console.log(err);
     })
-    // Transactions.findOne({parties: [id, "66c3db0eddfc365363ac0491"]})
-    // .then((docs) => {
-    //     console.log(docs);
-    // })
-    // Transactions.find()
+
 };
 
 module.exports = {

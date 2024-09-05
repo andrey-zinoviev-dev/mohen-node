@@ -3,10 +3,11 @@ const userRouter = express();
 
 const { auth } = require("../middlewares/authMiddlewares");
 
-const {loginUser, getOTPCode, getSellers, getSeller, getUser, updateBasket, updateFavourites} = require("../controllers/User");
+const {loginUser, getOTPCode, getSellers, getSeller, getUser, updateBasket, updateFavourites, userLogout} = require("../controllers/User");
 
 userRouter.post("/otp", getOTPCode);
 userRouter.post("/login", loginUser);
+userRouter.put("/logout", userLogout);
 
 userRouter.get("/me", auth, getUser);
 

@@ -113,6 +113,19 @@ const updateBasket = (req, res) => {
 const updateFavourites = (req, res) => {
   const { payload } = req.user;
   console.log("update favs here", payload);
+};
+
+const userLogout = (req, res) => {
+  // console.log(req.cookies);
+  // console.log("logout here");
+  const { token } = req.cookies;
+  if(!token) {
+    throw new Error ("Пользователь не найден");
+  }
+  return res.clearCookie("token", {
+    httpOnly: true,
+    // expiresIn: 3600,
+  }).status(200).send(JSON.stringify(true));
 }
 
 module.exports = {
@@ -122,5 +135,6 @@ module.exports = {
   getSeller,
   getUser,
   updateBasket,
-  updateFavourites
+  updateFavourites,
+  userLogout,
 }
