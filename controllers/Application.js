@@ -1,5 +1,6 @@
 const Applications = require("../models/applications");
-const Brands = require("../models/brands");
+// const Brands = require("../models/brands");
+const Users = require("../models/user");
 
 //dotenv
 const dotenv = require("dotenv");
@@ -25,7 +26,6 @@ const getApplication = (req, res) => {
     if(!doc) {
       throw new Error("Анкета не найдена");
     }
-    console.log(doc);
     Promise.all(doc.photos.value.map((photo) => {
       const readCommand = new GetObjectCommand({
         Bucket: process.env.AWS_NAME,
@@ -46,12 +46,6 @@ const getApplication = (req, res) => {
 };
 
 const sendApplication = (req, res) => {
-  // console.log(bodyEntries);
-  // const newObj = {};
-  // bodyEntries.forEach(([key, value]) => {
-  //   newObj[key] = value.value;
-  // });
-  // console.log(newObj);
   Applications.findOne({phone: req.body.phone.value})
   .then((doc) => {
     // console.log(doc);
@@ -84,7 +78,7 @@ const decideApplication = (req, res) => {
     doc.save();
 
     if(decision) {
-      return Brands.create({name: doc.name.value, description: doc.description.value, cover: "", goodsCollection: []})
+      return Users.create({name: doc.name.value, description: doc.description.value, cover: "", goodsCollection: [], seller: true, phone: doc.phone.value})
       .then((createdBrand) => {
         return res.status(201).send(doc);
       })
