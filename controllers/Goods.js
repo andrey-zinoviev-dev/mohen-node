@@ -19,9 +19,14 @@ const showGood = (req, res) => {
         }
         return res.status(200).send(JSON.stringify(doc));
     })
+};
+
+const addGood = (req, res) => {
+    console.log(req.body);
 }
 
 module.exports = {
     showGoods,
     showGood,
+    addGood,
 }
