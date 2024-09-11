@@ -1,5 +1,17 @@
 const Goods = require("../models/goods");
 
+//s3
+const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const s3ClientProfile = new S3Client({
+  region: process.env.AWS_REGION,
+  endpoint: process.env.AWS_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.AWS_KEY_ACCESS,
+    secretAccessKey: process.env.AWS_KEY_SECRET,
+  }
+})
+
 const showGoods = (req, res) => {
     Goods.find({})
     .then((docs) => {
@@ -7,6 +19,36 @@ const showGoods = (req, res) => {
             throw new Error("Товары не найдены");
         }
         return res.status(200).send(JSON.stringify(docs));
+    })
+};
+
+const showAccountGoods = (req, res) => {
+    const { _id } = req.user.payload;
+    Goods.find({seller: _id})
+    .then((docs) => {
+        if(!docs) {
+            throw new Error("Товары не найдены");
+        }
+
+        return Promise.all(docs.map((doc) => {
+            const readCommand = new GetObjectCommand({
+                Bucket: process.env.AWS_NAME,
+                Key: doc.photos[0].title,
+            });
+    
+            return getSignedUrl(s3ClientProfile, readCommand, {
+                expiresIn: 27000,
+            })
+            .then((url) => {
+                doc.cover = url;
+                return doc;
+            })
+        }))
+        .then(() => {
+            return res.status(200).send(JSON.stringify(docs));
+        })
+
+        // return res.status(200).send(JSON.stringify(docs));
     })
 };
 
@@ -44,6 +86,7 @@ const addGood = (req, res) => {
 
 module.exports = {
     showGoods,
+    showAccountGoods,
     showGood,
     addGood,
 }

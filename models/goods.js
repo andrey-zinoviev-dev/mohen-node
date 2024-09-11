@@ -13,10 +13,11 @@ const goodSchema = new mongoose.Schema({
   // quantity: Number,
   // stock: Number,
   // madeToOrder: Boolean,
-  photos: {
+  photos: [{
     title: String,
     url: String,
-  }
+    _id: false,
+  }],
   // dimensions: {}
 });
 
