@@ -18,7 +18,26 @@ const showGoods = (req, res) => {
         if(!docs) {
             throw new Error("Товары не найдены");
         }
-        return res.status(200).send(JSON.stringify(docs));
+
+        return Promise.all(docs.map((doc) => {
+            const readCommand = new GetObjectCommand({
+                Bucket: process.env.AWS_NAME,
+                Key: doc.photos[0].title,
+            });
+    
+            return getSignedUrl(s3ClientProfile, readCommand, {
+                expiresIn: 27000,
+            })
+            .then((url) => {
+                doc.cover = url;
+                return doc;
+            })
+        }))
+        .then(() => {
+            return res.status(200).send(JSON.stringify(docs));
+        })
+
+        // return res.status(200).send(JSON.stringify(docs));
     })
 };
 
@@ -48,18 +67,58 @@ const showAccountGoods = (req, res) => {
             return res.status(200).send(JSON.stringify(docs));
         })
 
-        // return res.status(200).send(JSON.stringify(docs));
     })
 };
 
 const showGood = (req, res) => {
     const { id } = req.params;
-    Goods.findById(id)
+    Goods.findById(id).populate("seller")
     .then((doc) => {
         if(!doc) {
             throw new Error("Товар не найден");
         }
-        return res.status(200).send(JSON.stringify(doc));
+
+        const readCommand = new GetObjectCommand({
+            Bucket: process.env.AWS_NAME,
+            Key: doc.photos[0].title,
+        });
+
+        return getSignedUrl(s3ClientProfile, readCommand, {
+            expiresIn: 27000,
+        })
+        .then((url) => {
+            doc.cover = url;
+
+            // const readSellerCommand = new GetObjectCommand({
+
+            // })
+            
+            const updatedPhotos = doc.photos.map((photo) => {
+                const readCommand = new GetObjectCommand({
+                    Bucket: process.env.AWS_NAME,
+                    Key: photo.title,
+                });
+        
+                return getSignedUrl(s3ClientProfile, readCommand, {
+                    expiresIn: 27000,
+                })
+                .then((url) => {
+                    photo.url = url;
+                    return photo;
+                })
+            });
+
+            Promise.all(updatedPhotos)
+            .then((result) => {
+                doc.photos = result;
+                return res.status(200).send(JSON.stringify(doc));
+
+            })
+            // return res.status(200).send(JSON.stringify(doc));
+
+            // return doc;
+        })
+
     })
 };
 

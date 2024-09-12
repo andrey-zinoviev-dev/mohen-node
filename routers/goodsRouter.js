@@ -8,7 +8,7 @@ const { showGoods, showAccountGoods, showGood, addGood } = require("../controlle
 
 goodsRouter.get("/showGoods", showGoods);
 goodsRouter.get("/showGoods/user", auth, showAccountGoods)
-goodsRouter.get("/showGood/:id", showGood);
+goodsRouter.get("/showGoods/:id", showGood);
 goodsRouter.post("/add", auth, addGood)
 
 module.exports = {
