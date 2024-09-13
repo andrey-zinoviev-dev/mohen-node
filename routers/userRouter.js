@@ -16,6 +16,7 @@ userRouter.get("/sellers/:id", getSeller);
 
 userRouter.post("/me/basket", auth, updateBasket);
 userRouter.post("/me/favourites", auth, updateFavourites);
+// user
 
 module.exports = {
     userRouter,

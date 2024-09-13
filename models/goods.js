@@ -8,6 +8,7 @@ const goodSchema = new mongoose.Schema({
   seller: {
     type: mongoose.Schema.Types.ObjectId, ref: "Users",
   },
+  batch: Number,
   dimensions: String,
   material: String,
   // quantity: Number,

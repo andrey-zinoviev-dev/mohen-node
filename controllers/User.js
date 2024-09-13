@@ -56,7 +56,7 @@ const getSeller = (req, res) => {
 
 const getUser = (req, res) => {
   const { payload } = req.user;
-  Users.findById(payload._id)
+  Users.findById(payload._id).populate("favourites").populate("basket")
   .then((doc) => {
     if(!doc) {
       throw new Error("Пользователь не найден");
@@ -73,7 +73,6 @@ const getUser = (req, res) => {
 const updateBasket = (req, res) => {
   // const { payload } = ;
   const { _id } = req.user.payload;
-  const { good } = req.body.good;
 
   Users.findById(_id)
   .then((doc) => {
@@ -83,26 +82,26 @@ const updateBasket = (req, res) => {
     }
 
     const isGoodInBasket = doc.basket.find((basketGood) => {
-      return basketGood._id.toString() === good._id.toString();
+      return basketGood._id.toString() === req.body.id;
     });
 
     // console.log(isGoodInBasket);
 
     if(!isGoodInBasket) {
-      doc.basket.push(good._id);
+      doc.basket.push(req.body.id);
     } else {
       // console.log("remove good from basket");
       doc.basket = doc.basket.filter((basketGood) => {
-        return basketGood._id.toString() !== good._id.toString();
+        return basketGood._id.toString() !== req.body.id;
       });
       
     }
 
-    // console.log(doc);
+    // // console.log(doc);
 
     doc.save();
 
-    return res.status(201).send(JSON.stringify(doc.basket));
+    return res.status(201).send(JSON.stringify({addedToBasket: isGoodInBasket ? false : true}));
 
   })
   .catch((err) => {
@@ -112,7 +111,31 @@ const updateBasket = (req, res) => {
 
 const updateFavourites = (req, res) => {
   const { payload } = req.user;
-  console.log("update favs here", payload);
+  // console.log("update favs here", payload);
+  // console.log(req.body);
+  Users.findById(payload._id)
+  .then((doc) => {
+    if(!doc) {
+      throw new Error("Пользователь не найден");
+    }
+
+    const favMatch = doc.favourites.find((fav) => {
+      return fav._id.toString() === req.body.id;
+    });
+
+    if(!favMatch) {
+      doc.favourites.push(req.body.id);
+    } else {
+      const newFavs =  doc.favourites.filter((prevFav) => {
+        console.log(prevFav._id.toString(), req.body.id);
+        return prevFav._id.toString() !== req.body.id;
+      })
+      doc.favourites = newFavs;
+    }
+    console.log(doc.favourites);
+    doc.save();
+    return res.status(201).send(JSON.stringify({addedToFavs: favMatch ? false : true}))
+  })
 };
 
 const userLogout = (req, res) => {
