@@ -1,6 +1,18 @@
 const Users = require("../models/user");
 const { generateJWT } = require("../utils");
 
+//s3
+const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const s3ClientProfile = new S3Client({
+  region: process.env.AWS_REGION,
+  endpoint: process.env.AWS_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.AWS_KEY_ACCESS,
+    secretAccessKey: process.env.AWS_KEY_SECRET,
+  }
+})
+
 const loginUser = (req, res) => {
   // User.find({phone})
 };
@@ -65,10 +77,34 @@ const getUser = (req, res) => {
     //   httpOnly: true,
     //   // expiresIn: 3600,
     // })
-    return res.status(200).send(JSON.stringify(doc));
+    
+    const newBasket = doc.basket.map((good) => {
+      const readCommand = new GetObjectCommand({
+          Bucket: process.env.AWS_NAME,
+          Key: good.photos[0].title,
+      });
+
+      return getSignedUrl(s3ClientProfile, readCommand, {
+          expiresIn: 27000,
+      })
+      .then((url) => {
+        good.cover = url;
+        return good;
+      })
+
+    });
+
+    Promise.all(newBasket)
+    .then((data) => {
+      doc.basket = data;
+      return res.status(200).send(JSON.stringify(doc));
+    })
+
+    // return res.status(200).send(JSON.stringify(doc));
   })
   // return res.status(200).send(JSON.stringify({str: "user to send"}));
 };
+
 
 const updateBasket = (req, res) => {
   // const { payload } = ;

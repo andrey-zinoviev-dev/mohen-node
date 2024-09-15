@@ -13,7 +13,7 @@ const s3ClientProfile = new S3Client({
 })
 
 const showGoods = (req, res) => {
-    Goods.find({})
+    Goods.find({}).populate("seller")
     .then((docs) => {
         if(!docs) {
             throw new Error("Товары не найдены");
