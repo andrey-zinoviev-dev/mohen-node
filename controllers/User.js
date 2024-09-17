@@ -68,7 +68,7 @@ const getSeller = (req, res) => {
 
 const getUser = (req, res) => {
   const { payload } = req.user;
-  Users.findById(payload._id).populate("favourites").populate("basket")
+  Users.findById(payload._id).populate("favourites").populate("basket").populate("goods")
   .then((doc) => {
     if(!doc) {
       throw new Error("Пользователь не найден");
@@ -77,26 +77,63 @@ const getUser = (req, res) => {
     //   httpOnly: true,
     //   // expiresIn: 3600,
     // })
-    
-    const newBasket = doc.basket.map((good) => {
+
+    //goods
+    const newGoods = Promise.all(doc.goods.map((good) => {
       const readCommand = new GetObjectCommand({
-          Bucket: process.env.AWS_NAME,
-          Key: good.photos[0].title,
+        Bucket: process.env.AWS_NAME,
+        Key: good.photos[0].title,
+      });
+      return getSignedUrl(s3ClientProfile, readCommand, {
+        expiresIn: 27000,
+      })
+      .then((url) => {
+        good.cover = url;
+        console.log(good);
+        return good;
+      })
+    }));
+    
+    const newBasket = Promise.all(doc.basket.map((good) => {
+      const readCommand = new GetObjectCommand({
+        Bucket: process.env.AWS_NAME,
+        Key: good.photos[0].title,
       });
 
       return getSignedUrl(s3ClientProfile, readCommand, {
-          expiresIn: 27000,
+        expiresIn: 27000,
       })
       .then((url) => {
         good.cover = url;
         return good;
       })
 
-    });
+    }));
 
-    Promise.all(newBasket)
+    //favs
+    const newFavs = Promise.all(doc.favourites.map((good) => {
+      const readCommand = new GetObjectCommand({
+        Bucket: process.env.AWS_NAME,
+        Key: good.photos[0].title,
+      });
+
+      return getSignedUrl(s3ClientProfile, readCommand, {
+        expiresIn: 27000,
+      })
+      .then((url) => {
+        good.cover = url;
+        return good;
+      })
+
+    }));
+
+    Promise.all([newBasket, newGoods, newFavs])
     .then((data) => {
-      doc.basket = data;
+      // console.log(data);
+      doc.basket = data[0];
+      doc.goods = data[1];
+      doc.favourites = data[2]
+      // console.log(data[0]);
       return res.status(200).send(JSON.stringify(doc));
     })
 
@@ -105,6 +142,9 @@ const getUser = (req, res) => {
   // return res.status(200).send(JSON.stringify({str: "user to send"}));
 };
 
+const showUserGoods = (req, res) => {
+  
+}
 
 const updateBasket = (req, res) => {
   // const { payload } = ;
