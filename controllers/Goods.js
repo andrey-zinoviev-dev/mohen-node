@@ -1,4 +1,5 @@
 const Goods = require("../models/goods");
+const Users = require("../models/user");
 
 //s3
 const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
@@ -136,7 +137,15 @@ const addGood = (req, res) => {
         if(!createdDoc) {
             throw new Error("Что-то пошло не так при создании товара")
         }
-        return res.status(201).send(JSON.stringify(createdDoc));
+
+        Users.findById(_id)
+        .then((doc) => {
+            doc.goods.push(createdDoc._id);
+            doc.save();
+            return res.status(201).send(JSON.stringify(createdDoc));
+
+        })
+
     })
     .catch((err) => {
         console.log(err);

@@ -68,11 +68,12 @@ const getSeller = (req, res) => {
 
 const getUser = (req, res) => {
   const { payload } = req.user;
-  Users.findById(payload._id).populate("favourites").populate("basket").populate("goods")
+  Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good")
   .then((doc) => {
     if(!doc) {
       throw new Error("Пользователь не найден");
     }
+    console.log(doc);
     // res.cookie("token", token, {
     //   httpOnly: true,
     //   // expiresIn: 3600,
@@ -94,7 +95,7 @@ const getUser = (req, res) => {
       })
     }));
     
-    const newBasket = Promise.all(doc.basket.map((good) => {
+    const newBasket = Promise.all(doc.basket.map(({ good }) => {
       const readCommand = new GetObjectCommand({
         Bucket: process.env.AWS_NAME,
         Key: good.photos[0].title,
@@ -157,23 +158,25 @@ const updateBasket = (req, res) => {
       throw new Error("Пользователь не найден")
     }
 
+    console.log(req.body);
+
     const isGoodInBasket = doc.basket.find((basketGood) => {
-      return basketGood._id.toString() === req.body.id;
+      return basketGood._id.toString() === req.body.good.good._id;
     });
 
     // console.log(isGoodInBasket);
 
     if(!isGoodInBasket) {
-      doc.basket.push(req.body.id);
+      doc.basket.push({good: req.body.good.good._id, quantity: req.body.good.quantity});
     } else {
       // console.log("remove good from basket");
       doc.basket = doc.basket.filter((basketGood) => {
-        return basketGood._id.toString() !== req.body.id;
+        return basketGood._id.toString() !== req.body.good.good._id;
       });
       
     }
 
-    // // console.log(doc);
+    // // // console.log(doc);
 
     doc.save();
 
