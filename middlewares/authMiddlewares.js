@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
     const { token } = req.cookies;
-
     try {
         if(!token) {
             throw new Error("Авторизируйтесь при обновлении страницы");
