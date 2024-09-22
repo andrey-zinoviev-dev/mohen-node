@@ -19,7 +19,7 @@ const loginUser = (req, res) => {
 
 const getOTPCode = (req, res, next) => {
   const { phone } = req.body;
-  Users.findOne({phone: `+7${phone}`})
+  Users.findOne({phone: `+7${phone}`}).populate("favourites").populate("goods").populate("basket.good")
   .then((doc) => {
     if(!doc) {
       return Users.create({phone: `+7${phone}`})
@@ -160,7 +160,7 @@ const updateBasket = (req, res) => {
       throw new Error("Пользователь не найден")
     }
 
-    const { good } = req.body;
+    const { good, quantity } = req.body;
     // console.log(good);
 
     const isGoodInBasket = doc.basket.find((basketGood) => {
@@ -173,7 +173,7 @@ const updateBasket = (req, res) => {
     // console.log(isGoodInBasket);
 
     if(!isGoodInBasket) {
-      doc.basket.push({good: good._id, quantity: good.quantity});
+      doc.basket.push({good: good._id, quantity: quantity});
     } else {
       // console.log("remove good from basket");
       doc.basket = doc.basket.filter((basketGood) => {
@@ -191,6 +191,46 @@ const updateBasket = (req, res) => {
   })
   .catch((err) => {
     console.log(err.message);
+  })
+};
+
+const updateBasketGood = (req, res) => {
+  const { payload } = req.user;
+  const { id, quantity } = req.body;
+
+  Users.findById(payload._id).populate("basket.good")
+  .then((doc) => {
+    if(!doc) {
+      throw new Error("Пользователь не найден");
+    }
+
+    doc.basket = doc.basket.map((basketItem) => {
+      return basketItem.good._id.toString() === id ? {...basketItem, quantity: basketItem.quantity + quantity} : basketItem
+    });
+    doc.save();
+    return res.status(201).send(JSON.stringify(doc.basket.find((basketItem) => {
+      return basketItem.good._id.toString() === id;
+    })));
+  })
+};
+
+const deleteBasketGood = (req, res) => {
+  const { payload } = req.user;
+  const { id } = req.body;
+
+  Users.findById(payload._id).populate("basket.good")
+  .then((doc) => {
+    if(!doc) {
+      throw new Error("Пользователь не найден");
+    }
+    // console.log(id);
+    doc.basket = doc.basket.filter((basketItem) => {
+      return basketItem.good._id.toString() !== id;
+    });
+
+    doc.save();
+
+    return res.status(201).send(JSON.stringify(true));
   })
 }
 
@@ -243,6 +283,8 @@ module.exports = {
   getSeller,
   getUser,
   updateBasket,
+  updateBasketGood,
+  deleteBasketGood,
   updateFavourites,
   userLogout,
 }
