@@ -37,6 +37,9 @@ const showGoods = (req, res) => {
         .then(() => {
             return res.status(200).send(JSON.stringify(docs));
         })
+        .catch((err) => {
+            console.log(err);
+        })
 
         // return res.status(200).send(JSON.stringify(docs));
     })
