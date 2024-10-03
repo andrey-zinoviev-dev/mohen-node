@@ -6,6 +6,7 @@ const { auth } = require("../middlewares/authMiddlewares");
 
 const { showGoods, showAccountGoods, showGood, addGood, updateBatch } = require("../controllers/Goods");
 goodsRouter.get("/test", (req, res) => {
+    console.log("test");
     return res.status(200).send({message: "Тестовое сообщение"});
 })
 goodsRouter.get("/showGoods", showGoods);
