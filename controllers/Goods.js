@@ -38,7 +38,7 @@ const showGoods = (req, res) => {
             return res.status(200).send(JSON.stringify(docs));
         })
         .catch((err) => {
-            console.log(err);
+            return res.status(401).send(JSON.stringify(err.message))
         })
 
         // return res.status(200).send(JSON.stringify(docs));
