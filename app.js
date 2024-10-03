@@ -26,8 +26,8 @@ mongoose.connect("mongodb://127.0.0.1:27017/mohen")
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors({
-  origin: "*",
-  // origin: ["http://localhost:5173", "http://mohen-tohen.ru",],
+  // origin: "*",
+  origin: ["http://localhost:5173", "http://mohen-tohen.ru", "https://mohen-tohen.ru"],
   credentials: true,
 }));
 
