@@ -135,7 +135,7 @@ const addGood = (req, res) => {
         return {title: photo.title};
     });
     // console.log(photosArray);
-    Goods.create({title: good.title, description: good.description, material: good.material, dimensions: good.dimensions, photos: photosArray, price: good.price, seller: _id})
+    Goods.create({title: good.title, description: good.description, material: good.material, dimensions: good.dimensions, photos: photosArray, price: good.price, seller: _id, batch: good.batch})
     .then((createdDoc) => {
         if(!createdDoc) {
             throw new Error("Что-то пошло не так при создании товара")
