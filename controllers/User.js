@@ -78,69 +78,69 @@ const getUser = (req, res) => {
     //   // expiresIn: 3600,
     // })
 
-    //goods
-    const newGoods = Promise.all(doc.goods.map((good) => {
-      const readCommand = new GetObjectCommand({
-        Bucket: process.env.AWS_NAME,
-        Key: good.photos[0].title,
-      });
-      return getSignedUrl(s3ClientProfile, readCommand, {
-        expiresIn: 27000,
-      })
-      .then((url) => {
-        good.cover = url;
-        console.log(good);
-        return good;
-      })
-    }));
+    // //goods
+    // const newGoods = Promise.all(doc.goods.map((good) => {
+    //   const readCommand = new GetObjectCommand({
+    //     Bucket: process.env.AWS_NAME,
+    //     Key: good.photos[0].title,
+    //   });
+    //   return getSignedUrl(s3ClientProfile, readCommand, {
+    //     expiresIn: 27000,
+    //   })
+    //   .then((url) => {
+    //     good.cover = url;
+    //     console.log(good);
+    //     return good;
+    //   })
+    // }));
 
-    // console.log(doc.basket);
+    // // console.log(doc.basket);
     
-    const newBasket = Promise.all(doc.basket.map((good) => {
-      // console.lo   g(good);
-      const readCommand = new GetObjectCommand({
-        Bucket: process.env.AWS_NAME,
-        Key: good.good.photos[0].title,
-      });
+    // const newBasket = Promise.all(doc.basket.map((good) => {
+    //   // console.lo   g(good);
+    //   const readCommand = new GetObjectCommand({
+    //     Bucket: process.env.AWS_NAME,
+    //     Key: good.good.photos[0].title,
+    //   });
 
-      return getSignedUrl(s3ClientProfile, readCommand, {
-        expiresIn: 27000,
-      })
-      .then((url) => {
-        good.good.cover = url;
-        return good;
-      })
+    //   return getSignedUrl(s3ClientProfile, readCommand, {
+    //     expiresIn: 27000,
+    //   })
+    //   .then((url) => {
+    //     good.good.cover = url;
+    //     return good;
+    //   })
 
-    }));
+    // }));
 
-    //favs
-    const newFavs = Promise.all(doc.favourites.map((good) => {
-      const readCommand = new GetObjectCommand({
-        Bucket: process.env.AWS_NAME,
-        Key: good.photos[0].title,
-      });
+    // //favs
+    // const newFavs = Promise.all(doc.favourites.map((good) => {
+    //   const readCommand = new GetObjectCommand({
+    //     Bucket: process.env.AWS_NAME,
+    //     Key: good.photos[0].title,
+    //   });
 
-      return getSignedUrl(s3ClientProfile, readCommand, {
-        expiresIn: 27000,
-      })
-      .then((url) => {
-        good.cover = url;
-        return good;
-      })
+    //   return getSignedUrl(s3ClientProfile, readCommand, {
+    //     expiresIn: 27000,
+    //   })
+    //   .then((url) => {
+    //     good.cover = url;
+    //     return good;
+    //   })
 
-    }));
+    // }));
 
-    Promise.all([newBasket, newGoods, newFavs])
-    .then((data) => {
-      // console.log(data);
-      doc.basket = data[0];
-      doc.goods = data[1];
-      doc.favourites = data[2]
-      // console.log(data[0]);
-      return res.status(200).send(JSON.stringify(doc));
-    })
+    // Promise.all([newBasket, newGoods, newFavs])
+    // .then((data) => {
+    //   // console.log(data);
+    //   doc.basket = data[0];
+    //   doc.goods = data[1];
+    //   doc.favourites = data[2]
+    //   // console.log(data[0]);
+    //   return res.status(200).send(JSON.stringify(doc));
+    // })
 
-    // return res.status(200).send(JSON.stringify(doc));
+    return res.status(200).send(JSON.stringify(doc));
   })
   // return res.status(200).send(JSON.stringify({str: "user to send"}));
 };

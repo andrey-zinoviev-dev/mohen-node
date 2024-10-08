@@ -27,10 +27,11 @@ const showGoods = (req, res) => {
             });
     
             return getSignedUrl(s3ClientProfile, readCommand, {
-                expiresIn: 27000,
+                // expiresIn: 27000,
             })
             .then((url) => {
                 doc.cover = url;
+                doc.save();
                 return doc;
             })
         }))
@@ -54,18 +55,19 @@ const showAccountGoods = (req, res) => {
         }
 
         return Promise.all(docs.map((doc) => {
-            const readCommand = new GetObjectCommand({
-                Bucket: process.env.AWS_NAME,
-                Key: doc.photos[0].title,
-            });
+
+            // const readCommand = new GetObjectCommand({
+            //     Bucket: process.env.AWS_NAME,
+            //     Key: doc.photos[0].title,
+            // });
     
-            return getSignedUrl(s3ClientProfile, readCommand, {
-                expiresIn: 27000,
-            })
-            .then((url) => {
-                doc.cover = url;
-                return doc;
-            })
+            // return getSignedUrl(s3ClientProfile, readCommand, {
+            //     // expiresIn: 27000,
+            // })
+            // .then((url) => {
+            //     doc.cover = url;
+            //     return doc;
+            // })
         }))
         .then(() => {
             return res.status(200).send(JSON.stringify(docs));
@@ -141,13 +143,47 @@ const addGood = (req, res) => {
             throw new Error("Что-то пошло не так при создании товара")
         }
 
-        Users.findById(_id)
+        const photos = createdDoc.photos.map((photo) => {
+            return {...photo, url: `http://cdn.mohen-tohen.ru/${photo.title}`};
+        });
+
+        createdDoc.photos = photos;
+        createdDoc.save();
+
+        return Users.findById(_id)
         .then((doc) => {
             doc.goods.push(createdDoc._id);
             doc.save();
+                // createdDoc.save();
             return res.status(201).send(JSON.stringify(createdDoc));
-
         })
+
+        // return res.status(201).send(JSON.stringify(createdDoc));
+
+        // Promise.all(createdDoc.photos.map((photo) => {
+        //     const readCommand = new GetObjectCommand({
+        //         Bucket: process.env.AWS_NAME,
+        //         Key: photo.title,
+        //     });
+
+        //     return getSignedUrl(s3ClientProfile, readCommand)
+        //     .then((url) => {
+        //         photo.url = url;
+        //         return photo;
+        //     })
+        // }))
+        // .then((data) => {
+        //     Users.findById(_id)
+        //     .then((doc) => {
+        //         doc.goods.push(createdDoc._id);
+        //         doc.save();
+        //         createdDoc.save();
+        //         return res.status(201).send(JSON.stringify(createdDoc));
+    
+        //     })
+        // })
+
+
 
     })
     .catch((err) => {
