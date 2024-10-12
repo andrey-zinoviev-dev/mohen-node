@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
   phone: String,
   seller: Boolean,
   description: String,
+  cover: String,
   favourites: [
     {
       type: mongoose.Schema.Types.ObjectId,

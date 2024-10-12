@@ -1,5 +1,5 @@
 const Users = require("../models/user");
-const { generateJWT } = require("../utils");
+const { generateJWT, generateNumber } = require("../utils");
 
 //s3
 const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
@@ -22,7 +22,8 @@ const getOTPCode = (req, res, next) => {
   Users.findOne({phone: `+7${phone}`}).populate("favourites").populate("goods").populate("basket.good")
   .then((doc) => {
     if(!doc) {
-      return Users.create({phone: `+7${phone}`})
+      const userName = generateNumber();
+      return Users.create({phone: `+7${phone}`, name:`пользователь ${userName}`, cover: `http://cdn.mohen-tohen.ru/Placeholder-_-Glossary.svg`})
       .then((createdDoc) => {
         const token = generateJWT(createdDoc._id);
         res.cookie("token", token, {

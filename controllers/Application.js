@@ -1,6 +1,9 @@
+const { application } = require("express");
 const Applications = require("../models/applications");
 // const Brands = require("../models/brands");
 const Users = require("../models/user");
+
+// const { generateNumber } = require("../utils");
 
 //dotenv
 const dotenv = require("dotenv");
@@ -74,6 +77,31 @@ const decideApplication = (req, res) => {
 
     doc.approved = decision;
     doc.save();
+
+    if(decision) {
+      Users.findOne({phone: doc.phone})
+      .then((userDoc) => {
+        // console.log()
+        if(!userDoc) {
+          // console.log("create user");
+          // const userName = generateNumber();
+          return Users.create({name: doc.name, description: doc.description, email: doc.email, cover: `http://cdn.mohen-tohen.ru/Placeholder-_-Glossary.svg`, phone: doc.phone, seller: true})
+          // .then((createdDoc) => {
+
+          // })
+          // throw new Error("")
+        } else {
+          userDoc.seller = true;
+          userDoc.save();
+          // console.log("update user");
+          // console.log(userDoc);
+
+          // userDoc.seller = true;
+          // userDoc.save();
+        }
+      })
+    }
+
 
     return res.status(201).send(JSON.stringify({decision: decision}));
   })
