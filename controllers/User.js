@@ -23,7 +23,7 @@ const getOTPCode = (req, res, next) => {
   .then((doc) => {
     if(!doc) {
       const userName = generateNumber();
-      return Users.create({phone: `+7${phone}`, name:`пользователь ${userName}`, cover: `http://cdn.mohen-tohen.ru/Placeholder-_-Glossary.svg`})
+      return Users.create({phone: `+7${phone}`, name:`Пользователь ${userName}`, cover: `http://cdn.mohen-tohen.ru/Placeholder-_-Glossary.svg`})
       .then((createdDoc) => {
         const token = generateJWT(createdDoc._id);
         res.cookie("token", token, {

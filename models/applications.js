@@ -49,6 +49,7 @@ const applicationSchema = new mongoose.Schema({
   email: String,
   phone: String,
   city: String,
+  brandName: String,
   category: [String],
   description: String,
   productionLength: String,

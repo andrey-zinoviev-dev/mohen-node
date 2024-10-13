@@ -17,6 +17,7 @@ const itemSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
   name: String,
+  brandName: String,
   email: String,
   phone: String,
   seller: Boolean,
