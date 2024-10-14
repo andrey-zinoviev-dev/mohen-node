@@ -9,10 +9,11 @@ const transactionSchema = new mongoose.Schema({
     goods: [
         {
             type: mongoose.Schema.Types.ObjectId, ref: "Goods",
-
         }
     ],
-    price: Number
+    price: Number,
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model("Transactions", transactionSchema);

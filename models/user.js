@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
   seller: Boolean,
   description: String,
   cover: String,
+  ordersHistory: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Transactions",
+    }
+  ],
   favourites: [
     {
       type: mongoose.Schema.Types.ObjectId,

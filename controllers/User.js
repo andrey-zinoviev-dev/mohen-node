@@ -1,3 +1,4 @@
+const { populate } = require("../models/applications");
 const Users = require("../models/user");
 const { generateJWT, generateNumber } = require("../utils");
 
@@ -19,7 +20,7 @@ const loginUser = (req, res) => {
 
 const getOTPCode = (req, res, next) => {
   const { phone } = req.body;
-  Users.findOne({phone: `+7${phone}`}).populate("favourites").populate("goods").populate("basket.good")
+  Users.findOne({phone: `+7${phone}`}).populate("favourites").populate("goods").populate("basket.good").populate("ordersHistory").populate("ordersHistory.goods")
   .then((doc) => {
     if(!doc) {
       const userName = generateNumber();
@@ -69,7 +70,17 @@ const getSeller = (req, res) => {
 
 const getUser = (req, res) => {
   const { payload } = req.user;
-  Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good")
+  Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good").populate("ordersHistory").populate({path: "ordersHistory", populate: {
+    path: "goods",
+  }}).populate({
+    path: "ordersHistory",
+    populate: {
+      path: "goods",
+      populate: {
+        path: "seller"
+      }
+    }
+  })
   .then((doc) => {
     if(!doc) {
       throw new Error("Пользователь не найден");
