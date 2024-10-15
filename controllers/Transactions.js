@@ -16,6 +16,11 @@ const showTransactions = (req, res) => {
 
 };
 
+const createTransaction = (req, res) => {
+    console.log(req.body);
+};
+
 module.exports = {
     showTransactions,
+    createTransaction,
 }

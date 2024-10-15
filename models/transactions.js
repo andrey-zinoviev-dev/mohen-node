@@ -12,6 +12,7 @@ const transactionSchema = new mongoose.Schema({
         }
     ],
     price: Number,
+    
 }, {
     timestamps: true
 });
