@@ -1,4 +1,5 @@
 const Transactions = require("../models/transactions");
+const Users = require("../models/user");
 
 const showTransactions = (req, res) => {
     const { _id } = req.user.payload;
@@ -17,7 +18,24 @@ const showTransactions = (req, res) => {
 };
 
 const createTransaction = (req, res) => {
-    console.log(req.body);
+    const { _id } = req.user.payload;
+    // console.log(req.body);
+    const updatedGoods = req.body.goods.map((good) => {
+        return {...good, good: good.good._id};
+    });
+    const brands = req.body.goods.map((good) => {
+        return good.good.seller;
+    });
+
+    // console.log(updatedGoods);
+    Transactions.create({parties: [...brands, _id], goods: updatedGoods, price: 39000})
+    .then((createdTransaction) => {
+        Users.findById(_id)
+        .then((user) => {
+            user.ordersHistory.push(createdTransaction._id);
+            user.save();
+        })
+    })
 };
 
 module.exports = {

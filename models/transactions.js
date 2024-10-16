@@ -8,11 +8,14 @@ const transactionSchema = new mongoose.Schema({
     ],
     goods: [
         {
-            type: mongoose.Schema.Types.ObjectId, ref: "Goods",
+            good: {
+                type: mongoose.Schema.Types.ObjectId, ref: "Goods",
+            },
+            quantity: Number,
+            _id: false,
         }
     ],
     price: Number,
-    
 }, {
     timestamps: true
 });

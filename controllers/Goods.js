@@ -20,29 +20,29 @@ const showGoods = (req, res) => {
             throw new Error("Товары не найдены");
         }
 
-        return Promise.all(docs.map((doc) => {
-            const readCommand = new GetObjectCommand({
-                Bucket: process.env.AWS_NAME,
-                Key: doc.photos[0].title,
-            });
+        // return Promise.all(docs.map((doc) => {
+        //     const readCommand = new GetObjectCommand({
+        //         Bucket: process.env.AWS_NAME,
+        //         Key: doc.photos[0].title,
+        //     });
     
-            return getSignedUrl(s3ClientProfile, readCommand, {
-                // expiresIn: 27000,
-            })
-            .then((url) => {
-                doc.cover = url;
-                doc.save();
-                return doc;
-            })
-        }))
-        .then(() => {
-            return res.status(200).send(JSON.stringify(docs));
-        })
-        .catch((err) => {
-            return res.status(401).send(JSON.stringify(err.message))
-        })
+        //     return getSignedUrl(s3ClientProfile, readCommand, {
+        //         // expiresIn: 27000,
+        //     })
+        //     .then((url) => {
+        //         doc.cover = url;
+        //         doc.save();
+        //         return doc;
+        //     })
+        // }))
+        // .then(() => {
+        //     return res.status(200).send(JSON.stringify(docs));
+        // })
+        // .catch((err) => {
+        //     return res.status(401).send(JSON.stringify(err.message))
+        // })
 
-        // return res.status(200).send(JSON.stringify(docs));
+        return res.status(200).send(JSON.stringify(docs));
     })
 };
 

@@ -70,14 +70,22 @@ const getSeller = (req, res) => {
 
 const getUser = (req, res) => {
   const { payload } = req.user;
-  Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good").populate("ordersHistory").populate({path: "ordersHistory", populate: {
+  Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good").populate({path: "ordersHistory", populate: {
+    path: "parties",
+  }}).populate({path: "ordersHistory", populate: {
     path: "goods",
+    populate: {
+      path: "good"
+    }
   }}).populate({
     path: "ordersHistory",
     populate: {
       path: "goods",
       populate: {
-        path: "seller"
+        path: "good",
+          populate: {
+            path: "seller"
+          }
       }
     }
   })
@@ -157,9 +165,9 @@ const getUser = (req, res) => {
   // return res.status(200).send(JSON.stringify({str: "user to send"}));
 };
 
-const showUserGoods = (req, res) => {
+// const showUserGoods = (req, res) => {
   
-}
+// }
 
 const updateBasket = (req, res) => {
   // const { payload } = ;
