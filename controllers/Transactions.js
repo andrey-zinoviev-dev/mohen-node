@@ -30,11 +30,24 @@ const createTransaction = (req, res) => {
     // console.log(updatedGoods);
     Transactions.create({parties: [...brands, _id], goods: updatedGoods, price: 39000})
     .then((createdTransaction) => {
-        Users.findById(_id)
-        .then((user) => {
-            user.ordersHistory.push(createdTransaction._id);
-            user.save();
+        return Promise.all(createdTransaction.parties.map((party) => {
+            return Users.findById(party)
+            .then((doc) => {
+                doc.ordersHistory.push(createdTransaction._id)
+                doc.save();
+                return doc;
+            })
+        }))
+        .then((data) => {
+            // console.log(createdTransaction);
+            return res.status(201).send(JSON.stringify(createdTransaction));
+            // console.log(data);
         })
+        // Users.findById(_id)
+        // .then((user) => {
+        //     user.ordersHistory.push(createdTransaction._id);
+        //     user.save();
+        // })
     })
 };
 
