@@ -40,7 +40,7 @@ const createTransaction = (req, res) => {
         }))
         .then((data) => {
             // console.log(createdTransaction);
-            return res.status(201).send(JSON.stringify(createdTransaction));
+            return res.status(201).send(JSON.stringify({createdOrder: createdTransaction}));
             // console.log(data);
         })
         // Users.findById(_id)
