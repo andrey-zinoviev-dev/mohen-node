@@ -12,6 +12,7 @@ const transactionSchema = new mongoose.Schema({
             title: String,
             cover: String,
             quantity: Number,
+            price: Number,
             seller: {
                 _id: String,
                 name: String,
@@ -40,7 +41,7 @@ const transactionSchema = new mongoose.Schema({
     //         _id: false,
     //     }
     // ],
-    price: Number,
+    total: Number,
 }, {
     timestamps: true
 });

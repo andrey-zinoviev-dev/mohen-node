@@ -21,7 +21,7 @@ const createTransaction = (req, res) => {
     const { _id } = req.user.payload;
     // console.log(req.body.goods);
     const updatedGoods = req.body.goods.map((good) => {
-        return {_id: good.good._id, title: good.good.title, cover: good.good.photos[0].url, quantity: good.quantity, seller: {
+        return {_id: good.good._id, title: good.good.title, cover: good.good.photos[0].url, price: good.good.price, quantity: good.quantity, seller: {
             _id: good.good.seller._id,
             name: good.good.seller.name,
             cover: good.good.seller.cover,
@@ -36,7 +36,7 @@ const createTransaction = (req, res) => {
     // });
 
     // console.log(updatedGoods);
-    Transactions.create({ buyer: {_id: _id}, goods: updatedGoods, price: 36000})
+    Transactions.create({ buyer: {_id: _id}, goods: updatedGoods, total: 36000})
     .then((createdTransaction) => {
         console.log(createdTransaction);
         return Promise.all([_id, sellers].map((party) => {
