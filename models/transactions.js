@@ -1,20 +1,45 @@
 const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema({
-    parties: [
-        {
-            type: mongoose.Schema.Types.ObjectId, ref: "Users",
-        }
-    ],
+    buyer: {
+        _id: String,
+        name: String,
+        cover: String,
+    },
     goods: [
         {
-            good: {
-                type: mongoose.Schema.Types.ObjectId, ref: "Goods",
-            },
+            _id: String,
+            title: String,
+            cover: String,
             quantity: Number,
-            _id: false,
+            seller: {
+                _id: String,
+                name: String,
+                cover: String,
+            }
         }
     ],
+    // sellers: [
+    //     {
+    //         _id: String,
+    //         name: String,
+    //         cover: String,
+    //     },
+    // ],
+    // parties: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId, ref: "Users",
+    //     }
+    // ],
+    // goods: [
+    //     {
+    //         good: {
+    //             type: mongoose.Schema.Types.ObjectId, ref: "Goods",
+    //         },
+    //         quantity: Number,
+    //         _id: false,
+    //     }
+    // ],
     price: Number,
 }, {
     timestamps: true

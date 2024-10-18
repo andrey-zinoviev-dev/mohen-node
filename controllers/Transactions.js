@@ -19,18 +19,27 @@ const showTransactions = (req, res) => {
 
 const createTransaction = (req, res) => {
     const { _id } = req.user.payload;
-    // console.log(req.body);
+    // console.log(req.body.goods);
     const updatedGoods = req.body.goods.map((good) => {
-        return {...good, good: good.good._id};
+        return {_id: good.good._id, title: good.good.title, cover: good.good.photos[0].url, quantity: good.quantity, seller: {
+            _id: good.good.seller._id,
+            name: good.good.seller.name,
+            cover: good.good.seller.cover,
+        }};
     });
-    const brands = req.body.goods.map((good) => {
-        return good.good.seller;
-    });
+    const sellers = updatedGoods.map((good) => {
+        return good.seller._id;
+    })
+    // console.log(updatedGoods);
+    // const brands = req.body.goods.map((good) => {
+    //     return good.good.seller;
+    // });
 
     // console.log(updatedGoods);
-    Transactions.create({parties: [...brands, _id], goods: updatedGoods, price: 39000})
+    Transactions.create({ buyer: {_id: _id}, goods: updatedGoods, price: 36000})
     .then((createdTransaction) => {
-        return Promise.all(createdTransaction.parties.map((party) => {
+        console.log(createdTransaction);
+        return Promise.all([_id, sellers].map((party) => {
             return Users.findById(party)
             .then((doc) => {
                 doc.ordersHistory.push(createdTransaction._id)

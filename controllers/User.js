@@ -70,26 +70,27 @@ const getSeller = (req, res) => {
 
 const getUser = (req, res) => {
   const { payload } = req.user;
-  Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good").populate({path: "ordersHistory", populate: {
-    path: "parties",
-  }}).populate({path: "ordersHistory", populate: {
-    path: "goods",
-    populate: {
-      path: "good"
-    }
-  }}).populate({
-    path: "ordersHistory",
-    populate: {
-      path: "goods",
-      populate: {
-        path: "good",
-          populate: {
-            path: "seller"
-          }
-      }
-    }
-  })
-  .then((doc) => {
+  // Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good").populate({path: "ordersHistory", populate: {
+  //   path: "parties",
+  // }}).populate({path: "ordersHistory", populate: {
+  //   path: "goods",
+  //   populate: {
+  //     path: "good"
+  //   }
+  // }}).populate({
+  //   path: "ordersHistory",
+  //   populate: {
+  //     path: "goods",
+  //     populate: {
+  //       path: "good",
+  //         populate: {
+  //           path: "seller"
+  //         }
+  //     }
+  //   }
+  // })
+
+  Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good").populate("ordersHistory").then((doc) => {
     if(!doc) {
       throw new Error("Пользователь не найден");
     }
