@@ -13,7 +13,16 @@ const itemSchema = new mongoose.Schema({
   },
   quantity: Number,
   _id: false,
-})
+});
+
+// const orderItemSchema = new mongoose.Schema({
+//   goods: [
+//     itemSchema
+//   ],
+//   buyer: {
+//     type: mongoose.Schema.Types.ObjectId, ref: "Users",
+// },
+// })
 
 const userSchema = new mongoose.Schema({
   name: String,

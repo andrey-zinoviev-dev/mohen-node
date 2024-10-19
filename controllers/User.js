@@ -20,7 +20,7 @@ const loginUser = (req, res) => {
 
 const getOTPCode = (req, res, next) => {
   const { phone } = req.body;
-  Users.findOne({phone: `+7${phone}`}).populate("favourites").populate("goods").populate("basket.good").populate("ordersHistory").populate("ordersHistory.goods")
+  Users.findOne({phone: `+7${phone}`})
   .then((doc) => {
     if(!doc) {
       const userName = generateNumber();
@@ -40,31 +40,11 @@ const getOTPCode = (req, res, next) => {
       httpOnly: true,
       // expiresIn: 3600,
     })
-    return res.status(200).send(JSON.stringify(doc));
+    return res.status(201).send(JSON.stringify({loggedIn: true}))
+    // return res.status(200).send(JSON.stringify(doc));
   })
   .catch((err) => {
     console.log(err);
-  })
-};
-
-const getSellers = (req, res) => {
-  Users.find({seller: true})
-  .then((docs) => {
-    if(!docs) {
-      throw new Error("Дизайнеры не найдены");
-    }
-    return res.status(200).send(JSON.stringify(docs));
-  })
-};
-
-const getSeller = (req, res) => {
-  const { id } = req.params;
-
-  Users.findById(id).populate("goods").then((doc) => {
-    if(!doc) {
-      throw new Error("Дизайнер не найден");
-    }
-    return res.status(200).send(JSON.stringify(doc));
   })
 };
 
@@ -90,7 +70,31 @@ const getUser = (req, res) => {
   //   }
   // })
 
-  Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good").populate("ordersHistory").then((doc) => {
+  Users.findById(payload._id).populate("favourites").populate("goods").populate("basket.good").populate("ordersHistory").populate({
+    path: "ordersHistory",
+    populate: {
+      path: "buyer",
+    }
+  }).populate({
+    path: "ordersHistory",
+    populate: {
+      path: "goods",
+      populate: {
+        path: "good",
+      }
+    }
+  }).populate({
+    path: "ordersHistory",
+    populate: {
+      path: "goods",
+      populate: {
+        path: "good",
+        populate: {
+          path: "seller",
+        }
+      }
+    }
+  }).then((doc) => {
     if(!doc) {
       throw new Error("Пользователь не найден");
     }
@@ -165,6 +169,29 @@ const getUser = (req, res) => {
   })
   // return res.status(200).send(JSON.stringify({str: "user to send"}));
 };
+
+const getSellers = (req, res) => {
+  Users.find({seller: true})
+  .then((docs) => {
+    if(!docs) {
+      throw new Error("Дизайнеры не найдены");
+    }
+    return res.status(200).send(JSON.stringify(docs));
+  })
+};
+
+const getSeller = (req, res) => {
+  const { id } = req.params;
+
+  Users.findById(id).populate("goods").then((doc) => {
+    if(!doc) {
+      throw new Error("Дизайнер не найден");
+    }
+    return res.status(200).send(JSON.stringify(doc));
+  })
+};
+
+
 
 // const showUserGoods = (req, res) => {
   
