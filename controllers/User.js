@@ -31,7 +31,7 @@ const getOTPCode = (req, res, next) => {
           httpOnly: true,
           // expiresIn: 3600,
         });
-        return res.status(201).send(JSON.stringify(createdDoc));
+        return res.status(201).send(JSON.stringify({loggedIn: true}));
       })
     }
     const token = generateJWT(doc._id);
