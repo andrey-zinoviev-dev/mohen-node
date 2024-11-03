@@ -86,7 +86,7 @@ const decideApplication = (req, res) => {
         if(!userDoc) {
           // console.log("create user");
           // const userName = generateNumber();
-          return Users.create({name: doc.name, brandName:doc.brandName, description: doc.description, email: doc.email, cover: `http://cdn.mohen-tohen.ru/Placeholder-_-Glossary.svg`, phone: doc.phone, seller: true})
+          return Users.create({name: doc.name, brandName:doc.brandName, description: doc.description, email: doc.email, cover: `http://cdn.mohen-tohen.ru/Placeholder-_-Glossary.svg`, phone: doc.phone, seller: true, ordersHistory: []})
           // .then((createdDoc) => {
 
           // })
