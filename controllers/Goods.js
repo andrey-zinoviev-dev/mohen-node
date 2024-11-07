@@ -19,28 +19,12 @@ const showGoods = (req, res) => {
         if(!docs) {
             throw new Error("Товары не найдены");
         }
-
-        // return Promise.all(docs.map((doc) => {
-        //     const readCommand = new GetObjectCommand({
-        //         Bucket: process.env.AWS_NAME,
-        //         Key: doc.photos[0].title,
-        //     });
-    
-        //     return getSignedUrl(s3ClientProfile, readCommand, {
-        //         // expiresIn: 27000,
-        //     })
-        //     .then((url) => {
-        //         doc.cover = url;
-        //         doc.save();
-        //         return doc;
-        //     })
-        // }))
-        // .then(() => {
-        //     return res.status(200).send(JSON.stringify(docs));
-        // })
-        // .catch((err) => {
-        //     return res.status(401).send(JSON.stringify(err.message))
-        // })
+        // console.log()
+        // const updatedDocs = docs.map((doc) => {
+        //     return {...doc, dateOfCreation: doc.createdAt.getTime()}
+        // });
+        // console.log(updatedDocs);
+        // console.log(docs.map((doc) => {}));
 
         return res.status(200).send(JSON.stringify(docs));
     })

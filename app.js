@@ -1,3 +1,15 @@
+
+
+// MongoClient.connect(url, options, function(err, conn) {
+//     if (conn.isConnected()) {
+//         const db = conn.db(DB_NAME)
+//         console.log(db.databaseName);
+//     }
+//     console.log('connect to db here');
+
+//     conn.close()
+// })
+
 const express = require("express");
 
 const app = express();
@@ -15,9 +27,10 @@ const cookieParser = require("cookie-parser");
 //mongoose
 const mongoose = require("mongoose");
 const { auth } = require("./middlewares/authMiddlewares");
-mongoose.connect("mongodb://127.0.0.1:27017/mohen")
+mongoose.connect('mongodb://127.0.0.1:27017/mohen')
+// mongoose.connect(`mongodb://${DB_USER}:${DB_PASS}@${DB_HOSTS[0]}/${DB_NAME}`, options)
 .then((data) => {
-  // console.log(data);
+  console.log("connected to mongoose");
 })
 .catch((err) => {
   console.log(err);

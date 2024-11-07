@@ -20,6 +20,8 @@ const goodSchema = new mongoose.Schema({
     _id: false,
   }],
   // dimensions: {}
+}, {
+  timestamps: true,
 });
 
 module.exports = mongoose.model("Goods", goodSchema);
