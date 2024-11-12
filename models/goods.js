@@ -11,6 +11,8 @@ const goodSchema = new mongoose.Schema({
   batch: Number,
   dimensions: String,
   material: String,
+  color: String,
+  category: String,
   // quantity: Number,
   // stock: Number,
   // madeToOrder: Boolean,
