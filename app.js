@@ -27,8 +27,8 @@ const cookieParser = require("cookie-parser");
 //mongoose
 const mongoose = require("mongoose");
 const { auth } = require("./middlewares/authMiddlewares");
-mongoose.connect('mongodb://127.0.0.1:27017/mohen')
-// mongoose.connect(`mongodb://${DB_USER}:${DB_PASS}@${DB_HOSTS[0]}/${DB_NAME}`, options)
+// mongoose.connect('mongodb://127.0.0.1:27017/mohen')
+mongoose.connect(`mongodb://${DB_USER}:${DB_PASS}@${DB_HOSTS[0]}/${DB_NAME}`, options)
 .then((data) => {
   console.log("connected to mongoose");
 })
