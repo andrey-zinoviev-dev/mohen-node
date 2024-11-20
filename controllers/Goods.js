@@ -73,6 +73,19 @@ const showGood = (req, res) => {
     })
 };
 
+const showCategory = (req, res) => {
+    const { name } = req.params;
+    Goods.find({
+        category: name,
+    }).populate("seller")
+    .then((docs) => {
+        if(!docs) {
+            throw new Error("Товар не найден");
+        }
+        return res.status(200).send(JSON.stringify(docs));
+    })
+}
+
 const addGood = (req, res) => {
     // console.log(req.body);
     const { _id } = req.user.payload;
@@ -89,7 +102,7 @@ const addGood = (req, res) => {
         }
 
         const photos = createdDoc.photos.map((photo) => {
-            return {...photo, url: `http://cdn.mohen-tohen.ru/${photo.title}`};
+            return {...photo, url: `https://cdn.mohen-tohen.ru/${photo.title}`};
         });
 
         createdDoc.photos = photos;
@@ -158,6 +171,7 @@ const updateBatch = (req, res) => {
 module.exports = {
     showGoods,
     showAccountGoods,
+    showCategory,
     showGood,
     addGood,
     updateBatch
