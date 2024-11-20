@@ -37,7 +37,6 @@ const options = {
   tlsCAFile: `/home/${process.env.DIRECTORY}/.mongodb/root.crt`,
   authSource: process.env.DB_NAME
 }
-
 //mongoose
 const mongoose = require("mongoose");
 const { auth } = require("./middlewares/authMiddlewares");
@@ -47,6 +46,7 @@ mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${proc
   console.log("connected to mongoose");
 })
 .catch((err) => {
+  mongoose.disconnect();
   console.log(err);
 })
 

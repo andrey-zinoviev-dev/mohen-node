@@ -2,16 +2,16 @@ const Goods = require("../models/goods");
 const Users = require("../models/user");
 
 //s3
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const s3ClientProfile = new S3Client({
-  region: process.env.AWS_REGION,
-  endpoint: process.env.AWS_ENDPOINT,
-  credentials: {
-    accessKeyId: process.env.AWS_KEY_ACCESS,
-    secretAccessKey: process.env.AWS_KEY_SECRET,
-  }
-})
+// const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+// const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+// const s3ClientProfile = new S3Client({
+//   region: process.env.AWS_REGION,
+//   endpoint: process.env.AWS_ENDPOINT,
+//   credentials: {
+//     accessKeyId: process.env.AWS_KEY_ACCESS,
+//     secretAccessKey: process.env.AWS_KEY_SECRET,
+//   }
+// })
 
 const showGoods = (req, res) => {
     Goods.find({}).populate("seller")

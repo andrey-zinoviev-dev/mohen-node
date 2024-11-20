@@ -3,16 +3,16 @@ const Users = require("../models/user");
 const { generateJWT, generateNumber } = require("../utils");
 
 //s3
-const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const s3ClientProfile = new S3Client({
-  region: process.env.AWS_REGION,
-  endpoint: process.env.AWS_ENDPOINT,
-  credentials: {
-    accessKeyId: process.env.AWS_KEY_ACCESS,
-    secretAccessKey: process.env.AWS_KEY_SECRET,
-  }
-})
+// const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
+// const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+// const s3ClientProfile = new S3Client({
+//   region: process.env.AWS_REGION,
+//   endpoint: process.env.AWS_ENDPOINT,
+//   credentials: {
+//     accessKeyId: process.env.AWS_KEY_ACCESS,
+//     secretAccessKey: process.env.AWS_KEY_SECRET,
+//   }
+// })
 
 const loginUser = (req, res) => {
   // User.find({phone})
@@ -24,7 +24,7 @@ const getOTPCode = (req, res, next) => {
   .then((doc) => {
     if(!doc) {
       const userName = generateNumber();
-      return Users.create({phone: `+7${phone}`, name:`Пользователь ${userName}`, cover: `http://cdn.mohen-tohen.ru/Placeholder-_-Glossary.svg`, ordersHistory: []})
+      return Users.create({phone: `+7${phone}`, name:`Пользователь ${userName}`, cover: `https://cdn.mohen-tohen.ru/Placeholder-_-Glossary.svg`, ordersHistory: []})
       .then((createdDoc) => {
         const token = generateJWT(createdDoc._id);
         res.cookie("token", token, {
