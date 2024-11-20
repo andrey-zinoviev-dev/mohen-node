@@ -9,6 +9,7 @@
 
 //     conn.close()
 // })
+// console.log()
 
 const express = require("express");
 
@@ -23,6 +24,10 @@ const { goodsRouter } = require("./routers/goodsRouter");
 const { transactionsRouter } = require("./routers/transactionsRouter");
 
 const cookieParser = require("cookie-parser");
+
+//env
+const env = require('dotenv');
+env.config();
 
 //options
 const options = {
