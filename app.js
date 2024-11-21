@@ -30,18 +30,18 @@ const env = require('dotenv');
 env.config();
 
 //options
-const options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  tls: true,
-  tlsCAFile: `/home/${process.env.DIRECTORY}/.mongodb/root.crt`,
-  authSource: process.env.DB_NAME
-}
+// const options = {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   tls: true,
+//   tlsCAFile: `/home/${process.env.DIRECTORY}/.mongodb/root.crt`,
+//   authSource: process.env.DB_NAME
+// }
 //mongoose
 const mongoose = require("mongoose");
 const { auth } = require("./middlewares/authMiddlewares");
-// mongoose.connect('mongodb://127.0.0.1:27017/mohen')
-mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}`, options)
+mongoose.connect('mongodb://127.0.0.1:27017/mohen')
+// mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}`, options)
 .then((data) => {
   console.log("connected to mongoose");
 })
