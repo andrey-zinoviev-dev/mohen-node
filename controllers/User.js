@@ -324,6 +324,24 @@ const userLogout = (req, res) => {
   }).status(200).send(JSON.stringify(true));
 }
 
+const updateUser = (req, res) => {
+  const { payload } = req.user;
+  Users.findById(payload._id)
+  .then((doc) => {
+    if(!doc) {
+      throw new Error("Поьзователь не найден")
+    }
+    Object.keys(req.body.editBody).forEach((key) => {
+      doc[key] = req.body.editBody[key];
+    })
+    doc.save();
+    return res.send(JSON.stringify(doc));
+  })
+  .catch((err) => {
+    console.log(err);
+  })
+}
+
 module.exports = {
   loginUser,
   getOTPCode,
@@ -335,4 +353,5 @@ module.exports = {
   deleteBasketGood,
   updateFavourites,
   userLogout,
+  updateUser
 }
