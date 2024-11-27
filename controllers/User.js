@@ -342,6 +342,20 @@ const updateUser = (req, res) => {
   })
 }
 
+const updateAvatar = (req, res) => {
+  const { payload } = req.user;
+  Users.findById(payload._id)
+  .then((doc) => {
+    if(!doc) {
+      throw new Error("Поьзователь не найден")
+    }
+    doc.cover = req.body.avatar;
+    doc.save();
+    return res.status(201).send(JSON.stringify(doc.cover));
+    // console.log(req.body.avatar)
+  })
+}
+
 module.exports = {
   loginUser,
   getOTPCode,
@@ -353,5 +367,6 @@ module.exports = {
   deleteBasketGood,
   updateFavourites,
   userLogout,
-  updateUser
+  updateUser,
+  updateAvatar,
 }
