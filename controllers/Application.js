@@ -45,7 +45,7 @@ const sendApplication = (req, res) => {
     Applications.create({
       name: application.name,
       email: application.email,
-      phone: application.phone,
+      phone: application.phone.includes("8") ? application.phone.replace("8", "+7") : application.phone,
       city: application.city,
       brandName: application.brandName,
       category: application.category,
@@ -56,7 +56,7 @@ const sendApplication = (req, res) => {
       size: application.size,
       dateOfFill: application.dateOfFill,
       photos: application.photos.map((photo) => {
-        return {...photo, url: `http://cdn.mohen-tohen.ru/${photo.title}`}
+        return {...photo, url: `https://cdn.mohen-tohen.ru/${photo.title}`}
       }),
       approved: application.approved,
     })
@@ -78,9 +78,10 @@ const decideApplication = (req, res) => {
 
     doc.approved = decision;
     doc.save();
-
+    let formattedPhone = doc.phone.includes("8") ? doc.phone.replace("8", "+7") : doc.phone;
+    // console.log(formattedPhone);
     if(decision) {
-      Users.findOne({phone: doc.phone})
+      Users.findOne({phone: formattedPhone})
       .then((userDoc) => {
         // console.log()
         if(!userDoc) {
@@ -93,6 +94,7 @@ const decideApplication = (req, res) => {
           // throw new Error("")
         } else {
           userDoc.seller = true;
+          userDoc.brandName = doc.brandName;
           userDoc.save();
           // console.log("update user");
           // console.log(userDoc);
