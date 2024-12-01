@@ -45,7 +45,9 @@ const sendApplication = (req, res) => {
     Applications.create({
       name: application.name,
       email: application.email,
-      phone: application.phone.includes("8") ? application.phone.replace("8", "+7") : application.phone,
+      phone: application.phone[0] === "8" ? application.phone.replace("8", "+7") : application.phone,
+      minPrice: application.minPrice,
+      maxPrice: application.maxPrice,
       city: application.city,
       brandName: application.brandName,
       category: application.category,
@@ -78,10 +80,10 @@ const decideApplication = (req, res) => {
 
     doc.approved = decision;
     doc.save();
-    let formattedPhone = doc.phone.includes("8") ? doc.phone.replace("8", "+7") : doc.phone;
+    // let formattedPhone = doc.phone.includes("8") ? doc.phone.replace("8", "+7") : doc.phone;
     // console.log(formattedPhone);
     if(decision) {
-      Users.findOne({phone: formattedPhone})
+      Users.findOne({phone: doc.phone})
       .then((userDoc) => {
         // console.log()
         if(!userDoc) {

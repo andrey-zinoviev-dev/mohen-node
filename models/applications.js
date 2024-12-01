@@ -52,6 +52,8 @@ const applicationSchema = new mongoose.Schema({
   brandName: String,
   category: [String],
   description: String,
+  minPrice: String,
+  maxPrice: String,
   productionLength: String,
   productionProcess: String,
   stock: String,
