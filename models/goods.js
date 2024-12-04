@@ -17,11 +17,7 @@ const goodSchema = new mongoose.Schema({
   // quantity: Number,
   // stock: Number,
   // madeToOrder: Boolean,
-  photos: [{
-    title: String,
-    url: String,
-    _id: false,
-  }],
+  photos: [String],
   // dimensions: {}
 }, {
   timestamps: true,

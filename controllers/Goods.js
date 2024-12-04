@@ -91,22 +91,24 @@ const addGood = (req, res) => {
     const { _id } = req.user.payload;
     const { good } = req.body;
 
-    const photosArray = good.photos.map((photo) => {
-        return {title: photo.title};
-    });
+    // const photosArray = good.photos.map((photo) => {
+    //     return {title: photo.title};
+    // });
+
+    // console.log(good);
     // console.log(photosArray);
-    Goods.create({title: good.title, description: good.description, color: good.color, category: good.category, madeToOrder: good.madeToOrder, material: good.material, dimensions: good.dimensions, photos: photosArray, price: good.price, seller: _id, batch: good.batch})
+    Goods.create({title: good.title, description: good.description, color: good.color, category: good.category, madeToOrder: good.madeToOrder, material: good.material, dimensions: good.dimensions, photos: good.photos, price: good.price, seller: _id, batch: good.batch})
     .then((createdDoc) => {
         if(!createdDoc) {
             throw new Error("Что-то пошло не так при создании товара")
         }
 
-        const photos = createdDoc.photos.map((photo) => {
-            return {...photo, url: `https://cdn.mohen-tohen.ru/${photo.title}`};
-        });
+        // const photos = createdDoc.photos.map((photo) => {
+        //     return {...photo, url: `https://cdn.mohen-tohen.ru/${photo.title}`};
+        // });
 
-        createdDoc.photos = photos;
-        createdDoc.save();
+        // createdDoc.photos = photos;
+        // createdDoc.save();
 
         return Users.findById(_id)
         .then((doc) => {
@@ -149,6 +151,20 @@ const addGood = (req, res) => {
     })
 };
 
+const editGood = (req, res) => {
+    const { goodId } = req.params;
+    const { good } = req.body;
+
+    Goods.findById(goodId)
+    .then((doc) => {
+        Object.keys(good).forEach((key) => {
+            doc[key] = good[key];
+        });
+        doc.save();
+        return res.status(201).send(JSON.stringify(doc));
+    })
+};
+
 const updateBatch = (req, res) => {
     const { id } = req.params;
     console.log(id);
@@ -174,5 +190,6 @@ module.exports = {
     showCategory,
     showGood,
     addGood,
+    editGood,
     updateBatch
 }
