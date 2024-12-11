@@ -1,5 +1,13 @@
 const mongoose = require("mongoose");
 
+const goodOptionSchema = new mongoose.Schema({
+  title: String, 
+  price: Number, 
+  type: String,
+  _id: false,
+
+})
+
 const goodSchema = new mongoose.Schema({
   title: String,
   description: String,
@@ -18,6 +26,9 @@ const goodSchema = new mongoose.Schema({
   // stock: Number,
   // madeToOrder: Boolean,
   photos: [String],
+  goodOptions: [
+    goodOptionSchema
+  ]
   // dimensions: {}
 }, {
   timestamps: true,
