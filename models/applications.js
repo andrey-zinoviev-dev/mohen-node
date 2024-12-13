@@ -59,7 +59,7 @@ const applicationSchema = new mongoose.Schema({
   stock: String,
   size: String,
   dateOfFill: String,
-  photos: [photoSchema],
+  photos: [String],
   approved: String,
 })
 

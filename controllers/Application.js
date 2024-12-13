@@ -29,6 +29,7 @@ const getApplication = (req, res) => {
     if(!doc) {
       throw new Error("Анкета не найдена");
     }
+    console.log(doc);
     return res.status(200).send(JSON.stringify(doc));
   })
 };
