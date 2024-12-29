@@ -1,11 +1,9 @@
 const mongoose = require("mongoose");
 
-const goodOptionSchema = new mongoose.Schema({
-  title: String, 
+const optionSchema = new mongoose.Schema({
+  option: String, 
   price: Number, 
-  type: String,
   _id: false,
-
 })
 
 const goodSchema = new mongoose.Schema({
@@ -17,18 +15,17 @@ const goodSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, ref: "Users",
   },
   batch: Number,
-  dimensions: String,
-  material: String,
-  color: String,
+  dimensions: [
+    optionSchema
+  ],
+  materials: [optionSchema],
+  colors: [optionSchema],
   category: String,
   madeToOrder: Boolean,
   // quantity: Number,
   // stock: Number,
   // madeToOrder: Boolean,
   photos: [String],
-  goodOptions: [
-    goodOptionSchema
-  ]
   // dimensions: {}
 }, {
   timestamps: true,
