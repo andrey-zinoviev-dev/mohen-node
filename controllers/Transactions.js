@@ -33,11 +33,22 @@ const getTransaction = (req, res) => {
 const createTransaction = (req, res) => {
     const { _id } = req.user.payload;
 
+    // console.log(req.body.goods);
+
     const sellers = req.body.goods.map((good) => {
-        return good.seller;
+        return good.good.seller._id;
     });
 
-    Transactions.create({goods: req.body.goods, buyer: _id, total: req.body.total})
+    const goodsList = req.body.goods.map((good) => {
+        return {good: good.good._id, color: good.good.selectedColor, dimension: good.good.selectedDimension, material: good.good.selectedMaterial, price: good.good.price, quantity: good.quantity}
+    })
+    // console.log(sellers);
+
+    // const sellers = req.body.goods.map((good) => {
+    //     return good.seller;
+    // });
+
+    Transactions.create({goods: goodsList, buyer: _id, total: req.body.total})
     .then((transactionCreated) => {
         if(!transactionCreated) {
             throw new Error("Произошла какая-то ошибка, попробуйте еще раз")
