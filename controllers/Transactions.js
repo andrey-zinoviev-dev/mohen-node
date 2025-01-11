@@ -17,20 +17,27 @@ const showTransactions = (req, res) => {
 
 };
 
+const getTransaction = (req, res) => {
+    const { id } = req.params;
+    Transactions.findById(id).populate({path: "goods", populate: {
+        path: "good",
+    }})
+    .then((doc) => {
+        if(!doc) {
+            throw Error("Транзакция не найдена");
+        }
+        return res.status(200).send(JSON.stringify(doc));
+    })
+};
+
 const createTransaction = (req, res) => {
     const { _id } = req.user.payload;
-    // console.log(req.body.goods);
-    const updatedGoods = req.body.goods.map((good) => {
-        return {good: good.good._id, quantity: good.quantity};
-    });
+
     const sellers = req.body.goods.map((good) => {
-        return good.good.seller._id;
+        return good.seller;
     });
 
-//    Transactions.create
-    // console.log(...sellers);
-
-    Transactions.create({goods: updatedGoods, buyer: _id, total: 36000})
+    Transactions.create({goods: req.body.goods, buyer: _id, total: req.body.total})
     .then((transactionCreated) => {
         if(!transactionCreated) {
             throw new Error("Произошла какая-то ошибка, попробуйте еще раз")
@@ -39,6 +46,7 @@ const createTransaction = (req, res) => {
         return Promise.all([_id, ...sellers].map((user) => {
             return Users.findById(user)
             .then((doc) => {
+                // console.log(doc);
                 doc.ordersHistory.push(transactionCreated._id);
                 doc.save();
                 return doc;
@@ -50,51 +58,11 @@ const createTransaction = (req, res) => {
         })
     })
 
-    // console.log(updatedGoods, sellers);
-
-    // console.log(updatedGoods);
-    // console.log(req.body.goods);
-    // const updatedGoods = req.body.goods.map((good) => {
-    //     return {_id: good.good._id, title: good.good.title, cover: good.good.photos[0].url, price: good.good.price, quantity: good.quantity, seller: {
-    //         _id: good.good.seller._id,
-    //         name: good.good.seller.name,
-    //         cover: good.good.seller.cover,
-    //     }};
-    // });
-    // const sellers = updatedGoods.map((good) => {
-    //     return good.seller._id;
-    // })
-    // console.log(updatedGoods);
-    // const brands = req.body.goods.map((good) => {
-    //     return good.good.seller;
-    // });
-
-    // console.log(updatedGoods);
-    // Transactions.create({ buyer: {_id: _id}, goods: updatedGoods, total: 36000})
-    // .then((createdTransaction) => {
-    //     console.log(createdTransaction);
-    //     return Promise.all([_id, sellers].map((party) => {
-    //         return Users.findById(party)
-    //         .then((doc) => {
-    //             doc.ordersHistory.push(createdTransaction._id)
-    //             doc.save();
-    //             return doc;
-    //         })
-    //     }))
-    //     .then((data) => {
-    //         // console.log(createdTransaction);
-    //         return res.status(201).send(JSON.stringify({createdOrder: createdTransaction}));
-    //         // console.log(data);
-    //     })
-    //     // Users.findById(_id)
-    //     // .then((user) => {
-    //     //     user.ordersHistory.push(createdTransaction._id);
-    //     //     user.save();
-    //     // })
-    // })
+    
 };
 
 module.exports = {
     showTransactions,
+    getTransaction,
     createTransaction,
 }
