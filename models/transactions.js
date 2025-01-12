@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const goodSchema = new mongoose.Schema({
     good: {
-        type: mongoose.Schema.Types.ObjectId, ref: "Goods",
+        _id: String,
+        title: String,
+        seller: String,
+        price: Number,
+        // type: mongoose.Schema.Types.ObjectId, ref: "Goods",
     },
     color: {
         option: String,
@@ -16,7 +20,6 @@ const goodSchema = new mongoose.Schema({
         option: String,
         price: Number,
     },
-    price: Number,
     quantity: Number,
     _id: false,
 })
