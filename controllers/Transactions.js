@@ -34,36 +34,38 @@ const createTransaction = (req, res) => {
     const { _id } = req.user.payload;
 
     const goodsList = req.body.goods.map((cartItem) => {
-        return {...cartItem, color: cartItem.selectedColor, dimension: cartItem.selectedDimension, material: cartItem.selectedMaterial, seller: cartItem.good.seller._id, quantity: cartItem.quantity};
+        return {...cartItem, color: cartItem.selectedColor, dimension: cartItem.selectedDimension, material: cartItem.selectedMaterial, seller: cartItem.seller._id};
     });
 
-    console.log(req.body.goods);
+    // console.log(goodsList);
+
+    // console.log(req.body.goods);
     
     const sellers = req.body.goods.map((cartItem) => {
-        return cartItem.good.seller._id;
+        return cartItem.seller._id;
     });
 
 
-    // Transactions.create({goods: goodsList, buyer: _id, total: req.body.total})
-    // .then((transactionCreated) => {
-    //     if(!transactionCreated) {
-    //         throw new Error("Произошла какая-то ошибка, попробуйте еще раз")
-    //     }
+    Transactions.create({goods: goodsList, personalData: req.body.personalData, buyer: _id, total: req.body.total})
+    .then((transactionCreated) => {
+        if(!transactionCreated) {
+            throw new Error("Произошла какая-то ошибка, попробуйте еще раз")
+        }
 
-    //     return Promise.all([_id, ...sellers].map((user) => {
-    //         return Users.findById(user)
-    //         .then((doc) => {
-    //             // console.log(doc);
-    //             doc.ordersHistory.push(transactionCreated._id);
-    //             doc.save();
-    //             return doc;
-    //         })
-    //     }))
-    //     .then(() => {
-    //         // console.log(updatedUsers);
-    //         return res.status(201).send(JSON.stringify({createdOrder: transactionCreated}));
-    //     })
-    // })
+        return Promise.all([_id, ...sellers].map((user) => {
+            return Users.findById(user)
+            .then((doc) => {
+                // console.log(doc);
+                doc.ordersHistory.push(transactionCreated._id);
+                doc.save();
+                return doc;
+            })
+        }))
+        .then(() => {
+            // console.log(updatedUsers);
+            return res.status(201).send(JSON.stringify({createdOrder: transactionCreated}));
+        })
+    })
 
     
 };

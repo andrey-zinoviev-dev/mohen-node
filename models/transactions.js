@@ -19,12 +19,21 @@ const goodSchema = new mongoose.Schema({
     },
     quantity: Number,
     _id: false,
+});
+
+const personalDataSchema = new mongoose.Schema({
+    name: String,
+    phone: String,
+    email: String,
+    address: String,
+    zipcode: String,
 })
 
 const transactionSchema = new mongoose.Schema({
     buyer: {
         type: mongoose.Schema.Types.ObjectId, ref: "Users",
     },
+    personalData: personalDataSchema,
     goods: [
         goodSchema
     ],
