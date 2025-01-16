@@ -3,17 +3,18 @@ const mongoose = require("mongoose");
 const goodSchema = new mongoose.Schema({
     _id: String,
     title: String,
+    cover: String,
     seller: String,
     price: Number,
-    color: {
+    selectedColor: {
         option: String,
         price: Number,
     },
-    dimension: {
+    selectedDimension: {
         option: String,
         price: Number,
     },
-    material: {
+    selectedMaterial: {
         option: String,
         price: Number,
     },
