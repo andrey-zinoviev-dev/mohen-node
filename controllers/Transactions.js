@@ -1,5 +1,7 @@
 const Transactions = require("../models/transactions");
 const Users = require("../models/user");
+const Goods = require("../models/goods");
+
 
 const showTransactions = (req, res) => {
     const { _id } = req.user.payload;
@@ -34,7 +36,7 @@ const createTransaction = (req, res) => {
     const { _id } = req.user.payload;
 
     const goodsList = req.body.goods.map((cartItem) => {
-        return {...cartItem, color: cartItem.selectedColor, dimension: cartItem.selectedDimension, material: cartItem.selectedMaterial, seller: cartItem.seller._id};
+        return {...cartItem, _id: cartItem._id, color: cartItem.selectedColor, dimension: cartItem.selectedDimension, material: cartItem.selectedMaterial, seller: cartItem.seller._id};
     });
 
     // console.log(goodsList);
@@ -45,27 +47,38 @@ const createTransaction = (req, res) => {
         return cartItem.seller._id;
     });
 
-
-    Transactions.create({goods: goodsList, personalData: req.body.personalData, buyer: _id, total: req.body.total})
-    .then((transactionCreated) => {
-        if(!transactionCreated) {
-            throw new Error("Произошла какая-то ошибка, попробуйте еще раз")
-        }
-
-        return Promise.all([_id, ...sellers].map((user) => {
-            return Users.findById(user)
-            .then((doc) => {
-                // console.log(doc);
-                doc.ordersHistory.push(transactionCreated._id);
-                doc.save();
-                return doc;
+    return Promise.all(goodsList.map((good) => {
+        return Goods.findById(good._id)
+        .then((doc) => {
+            doc.batch = doc.batch - good.quantity;
+            return doc.save();
+        })
+    }))
+    .then(() => {
+        Transactions.create({goods: goodsList, personalData: req.body.personalData, buyer: _id, total: req.body.total})
+        .then((transactionCreated) => {
+            if(!transactionCreated) {
+                throw new Error("Произошла какая-то ошибка, попробуйте еще раз")
+            }
+    
+            return Promise.all([_id, ...sellers].map((user) => {
+                return Users.findById(user)
+                .then((doc) => {
+                    // console.log(doc);
+                    doc.ordersHistory.push(transactionCreated._id);
+                    doc.save();
+                    return doc;
+                })
+            }))
+            .then(() => {
+                // console.log(updatedUsers);
+                return res.status(201).send(JSON.stringify({createdOrder: transactionCreated}));
             })
-        }))
-        .then(() => {
-            // console.log(updatedUsers);
-            return res.status(201).send(JSON.stringify({createdOrder: transactionCreated}));
         })
     })
+
+
+
 
     
 };

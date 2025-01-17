@@ -168,20 +168,20 @@ const editGood = (req, res) => {
 const updateBatch = (req, res) => {
     const { id } = req.params;
     console.log(id);
-    console.log(req.body);
-    Goods.findById(id)
-    .then((doc) => {
-        if(!doc) {
-            throw new Error("Товар не найден");
-        }
-        doc.batch = req.body.size;
-        doc.save();
+    // console.log(req.body);
+    // Goods.findById(id)
+    // .then((doc) => {
+    //     if(!doc) {
+    //         throw new Error("Товар не найден");
+    //     }
+    //     doc.batch = req.body.size;
+    //     doc.save();
 
-        return res.status(201).send(JSON.stringify({updatedBatch: doc.batch}))
-    })
-    .catch((err) => {
-        console.log(err);
-    })
+    //     return res.status(201).send(JSON.stringify({updatedBatch: doc.batch}))
+    // })
+    // .catch((err) => {
+    //     console.log(err);
+    // })
 };
 
 module.exports = {

@@ -19,7 +19,7 @@ const goodSchema = new mongoose.Schema({
         price: Number,
     },
     quantity: Number,
-    _id: false,
+    // _id: false,
 });
 
 const personalDataSchema = new mongoose.Schema({
