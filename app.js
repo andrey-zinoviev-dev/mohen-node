@@ -42,8 +42,8 @@ const options = {
 //mongoose
 const mongoose = require("mongoose");
 const { auth } = require("./middlewares/authMiddlewares");
-mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@127.0.0.1:27017/mohen`)
-// mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}`, options)
+// mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@127.0.0.1:27017/mohen`)
+mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}`, options)
 .then((data) => {
   console.log("connected to mongoose");
 })
