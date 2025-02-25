@@ -42,9 +42,15 @@ console.log(process.env.DB_USER, process.env.DB_PASS);
 //mongoose
 const mongoose = require("mongoose");
 const { auth } = require("./middlewares/authMiddlewares");
-mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@127.0.0.1:27017/mohen`)
+// mongoose.connect(`mongodb://127.0.0.1:27017/mohen`)
+mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@127.0.0.1:27017/mohen`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  authSource: "admin"
+})
 // mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}`, options)
 .then((data) => {
+
   console.log("connected to mongoose");
 })
 .catch((err) => {
