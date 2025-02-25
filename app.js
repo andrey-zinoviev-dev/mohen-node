@@ -33,11 +33,11 @@ env.config();
 
 //options
 const options = {
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true,
-  // tls: true,
-  // tlsCAFile: `/home/${process.env.DIRECTORY}/.mongodb/root.crt`,
-  // authSource: process.env.DB_NAME
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  tls: true,
+  tlsCAFile: `/home/${process.env.DIRECTORY}/.mongodb/root.crt`,
+  authSource: process.env.DB_NAME
 }
 //mongoose
 const mongoose = require("mongoose");
