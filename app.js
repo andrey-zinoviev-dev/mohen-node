@@ -25,10 +25,6 @@ const { transactionsRouter } = require("./routers/transactionsRouter");
 
 const { createServer } = require("http");
 
-const httpServer = createServer(app);
-
-const { Server } = require("socket.io");
-
 const cookieParser = require("cookie-parser");
 
 //env
@@ -77,20 +73,7 @@ app.use("/goods", goodsRouter);
 app.use(auth);
 app.use("/transactions", transactionsRouter);
 
-//io
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:5173",
-  }
-});
-
-io.on("connection", (socket) => {
-  socket.on("newBatch", (data) => {
-    socket.broadcast.emit("stockUpdate", data);
-  })
-})
-
-httpServer.listen(3000);
+app.listen(3000);
 
 // app.listen(3000, () => {
 //   console.log("yes");
